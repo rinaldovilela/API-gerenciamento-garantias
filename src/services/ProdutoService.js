@@ -1,8 +1,10 @@
 const ProdutoRepository = require("../repositories/ProdutoRepository");
 const GarantiaRepository = require("../repositories/GarantiaRepository"); // Repositório de Garantia
+const ClienteRepository = require("../repositories/ClienteRepository"); // Repositório de Cliente
 const moment = require("moment");
 
 class ProdutoService {
+  // Função para registrar o produto e criar a garantia automaticamente
   async registrarProduto(produtoData, clienteId) {
     // Validar os dados do produto
     const valida = this.validarProduto(produtoData);
@@ -10,12 +12,16 @@ class ProdutoService {
       throw new Error(valida.message); // Lança um erro se a validação falhar
     }
 
-    const produto = await ProdutoRepository.create(produtoData);
+    // Criar o produto com a associação ao cliente
+    const produto = await ProdutoRepository.create({
+      ...produtoData,
+      clienteId: clienteId, // Associando o cliente ao produto
+    });
 
     // Criar Garantia automaticamente
     const garantiaData = {
       produtoId: produto._id,
-      clienteId: clienteId, // Associando ao cliente
+      clienteId: clienteId, // Associando o cliente à garantia
       dataInicio: produtoData.dataCompra,
       dataFim: new Date(
         new Date(produtoData.dataCompra).setMonth(
@@ -25,22 +31,35 @@ class ProdutoService {
       ),
     };
 
-    await GarantiaRepository.create(garantiaData); // Criar Garantia automaticamente
+    // Criar a garantia e associar ao produto
+    await GarantiaRepository.create(garantiaData);
+
+    // Associar o produto ao cliente, se necessário
+    const cliente = await ClienteRepository.findById(clienteId);
+    if (cliente) {
+      cliente.produtos.push(produto._id); // Adiciona o produto ao cliente
+      await cliente.save();
+    }
+
     return produto;
   }
 
+  // Função para listar todos os produtos
   async listarProdutos() {
     return await ProdutoRepository.findAll();
   }
 
+  // Função para obter um produto específico
   async obterProduto(produtoId) {
     return await ProdutoRepository.findById(produtoId);
   }
 
+  // Função para atualizar um produto
   async atualizarProduto(produtoId, updateData) {
     return await ProdutoRepository.update(produtoId, updateData);
   }
 
+  // Função para deletar um produto
   async deletarProduto(produtoId) {
     return await ProdutoRepository.delete(produtoId);
   }
