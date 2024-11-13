@@ -2,6 +2,12 @@ const ProdutoRepository = require("../repositories/ProdutoRepository");
 
 class ProdutoService {
   async registrarProduto(produtoData) {
+    // Validar os dados do produto
+    const valida = this.validarProduto(produtoData);
+    if (!valida.isValid) {
+      throw new Error(valida.message); // Lança um erro se a validação falhar
+    }
+
     const produto = await ProdutoRepository.create(produtoData);
     return produto;
   }
@@ -20,6 +26,30 @@ class ProdutoService {
 
   async deletarProduto(produtoId) {
     return await ProdutoRepository.delete(produtoId);
+  }
+
+  // Função de validação do produto
+  validarProduto(produtoData) {
+    if (!produtoData.nome || produtoData.nome.trim() === "") {
+      return { isValid: false, message: "O nome do produto é obrigatório" };
+    }
+    if (!produtoData.categoria || produtoData.categoria.trim() === "") {
+      return { isValid: false, message: "A categoria é obrigatória" };
+    }
+    if (!produtoData.fabricante || produtoData.fabricante.trim() === "") {
+      return { isValid: false, message: "O fabricante é obrigatório" };
+    }
+    if (!produtoData.dataCompra || isNaN(Date.parse(produtoData.dataCompra))) {
+      return { isValid: false, message: "A data de compra é inválida" };
+    }
+    if (!produtoData.garantiaMeses || produtoData.garantiaMeses <= 0) {
+      return {
+        isValid: false,
+        message: "A garantia deve ser um número inteiro positivo",
+      };
+    }
+
+    return { isValid: true, message: "Produto válido" }; // Retorna um objeto indicando que o produto é válido
   }
 }
 
