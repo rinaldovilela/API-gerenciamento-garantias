@@ -229,3 +229,15 @@ Resumo das relações possíveis:
 Produto -> Garantia: Relacionamento direto (já implementado com produtoId).
 Produto -> Cliente: Relacionamento indireto, mas pode ser implementado com clienteId no modelo Produto.
 Garantia -> Cliente: Relacionamento indireto através de Produto, mas também pode ser implementado diretamente com clienteId no modelo Garantia.
+
+
+
+Automação de Garantias: Ao registrar um Produto, a Garantia pode ser gerada automaticamente com base nos dados do produto (como a data de compra e a duração da garantia). Isso economizaria a necessidade de criar garantias manualmente para cada produto registrado.
+
+Associar Garantia a Produto e Cliente: Cada Garantia deve estar associada a um Cliente e um Produto para que se possa rastrear facilmente qual produto está sendo garantido por qual cliente.
+
+Ações com Garantias: Implementar funcionalidades como notificação quando a garantia de um produto está prestes a expirar. Isso poderia ser feito de forma periódica com um agendador (ex. node-cron) que verifica as garantias.
+
+Validação de Expiração: A API poderia realizar uma validação quando o status da garantia for consultado, informando se ela está "ativa" ou "expirada" com base na data atual.
+
+Filtros de Busca e Relatórios: Poderia ser interessante implementar filtros para pesquisar produtos, garantias ou clientes com base em critérios como status de garantia, categoria do produto, ou data de compra.
