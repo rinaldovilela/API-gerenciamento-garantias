@@ -9,7 +9,11 @@ exports.registrarProduto = async (req, res) => {
   }
 
   try {
-    const produto = await ProdutoService.registrarProduto(req.body);
+    const { clienteId } = req.body; // Recebendo o clienteId da requisição
+    if (!clienteId) {
+      return res.status(400).json({ error: "O ID do cliente é obrigatório" });
+    }
+    const produto = await ProdutoService.registrarProduto(req.body, clienteId);
     res.status(201).json(produto);
   } catch (error) {
     res.status(500).json({ error: error.message });

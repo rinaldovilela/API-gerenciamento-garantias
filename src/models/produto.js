@@ -6,6 +6,7 @@ const ProdutoSchema = new mongoose.Schema({
   fabricante: String,
   dataCompra: Date,
   garantiaMeses: Number,
+  GarantiaId: { type: mongoose.Schema.Types.ObjectId, ref: "Garantia" },
 });
 
 module.exports = mongoose.model("Produto", ProdutoSchema);

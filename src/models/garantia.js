@@ -6,6 +6,11 @@ const GarantiaSchema = new mongoose.Schema({
     ref: "Produto",
     required: true,
   },
+  clienteId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Cliente",
+    required: true,
+  },
   dataInicio: { type: Date, required: true },
   dataFim: { type: Date, required: true },
   status: { type: String, enum: ["ativa", "expirada"], default: "ativa" },

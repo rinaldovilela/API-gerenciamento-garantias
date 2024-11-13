@@ -3,7 +3,7 @@ const GarantiaRepository = require("../repositories/GarantiaRepository"); // Rep
 const moment = require("moment");
 
 class ProdutoService {
-  async registrarProduto(produtoData) {
+  async registrarProduto(produtoData, clienteId) {
     // Validar os dados do produto
     const valida = this.validarProduto(produtoData);
     if (!valida.isValid) {
@@ -12,19 +12,20 @@ class ProdutoService {
 
     const produto = await ProdutoRepository.create(produtoData);
 
-    // Gerar garantia automaticamente
+    // Criar Garantia automaticamente
     const garantiaData = {
       produtoId: produto._id,
-      dataInicio: produto.dataCompra,
-      dataFim: moment(produto.dataCompra)
-        .add(produto.garantiaMeses, "months")
-        .toDate(),
-      status: "ativa", // Garantia ativa ao ser criada
+      clienteId: clienteId, // Associando ao cliente
+      dataInicio: produtoData.dataCompra,
+      dataFim: new Date(
+        new Date(produtoData.dataCompra).setMonth(
+          new Date(produtoData.dataCompra).getMonth() +
+            produtoData.garantiaMeses
+        )
+      ),
     };
 
-    // Criar a garantia no banco
-    await GarantiaRepository.create(garantiaData);
-
+    await GarantiaRepository.create(garantiaData); // Criar Garantia automaticamente
     return produto;
   }
 
