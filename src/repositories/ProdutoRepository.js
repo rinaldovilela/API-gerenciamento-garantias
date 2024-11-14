@@ -6,14 +6,12 @@ class ProdutoRepository {
   }
 
   async findById(produtoId) {
-    // Asegure-se de que o populate esteja correto
     return await Produto.findById(produtoId)
       .populate("clienteId")
       .populate("garantias");
   }
 
   async findAll() {
-    // Asegure-se de que o populate esteja correto
     return await Produto.find().populate("clienteId").populate("garantias");
   }
 

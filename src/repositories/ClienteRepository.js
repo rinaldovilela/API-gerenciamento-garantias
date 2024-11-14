@@ -6,11 +6,17 @@ class ClienteRepository {
   }
 
   async findAll() {
-    return await Cliente.find().populate("produtos"); // Popula os produtos
+    return await Cliente.find().populate({
+      path: "produtos",
+      populate: { path: "garantias" }, // Popula garantias dentro de produtos
+    });
   }
 
   async findById(clienteId) {
-    return await Cliente.findById(clienteId).populate("produtos"); // Popula os produtos
+    return await Cliente.findById(clienteId).populate({
+      path: "produtos",
+      populate: { path: "garantias" }, // Popula garantias dentro de produtos
+    });
   }
 
   async update(clienteId, updateData) {

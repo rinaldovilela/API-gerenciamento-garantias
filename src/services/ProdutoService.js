@@ -1,25 +1,30 @@
 const ProdutoRepository = require("../repositories/ProdutoRepository");
 const GarantiaRepository = require("../repositories/GarantiaRepository");
+const ClienteRepository = require("../repositories/ClienteRepository");
 
 class ProdutoService {
-  // Função para listar produtos com suas garantias associadas
   async listarProdutosComGarantias() {
-    return await ProdutoRepository.findAll(); // Vai usar o método findAll do repositório que já faz o populate
+    return await ProdutoRepository.findAll();
   }
 
   async registrarProduto(produtoData, clienteId) {
-    // Validar os dados do produto
     const valida = this.validarProduto(produtoData);
-    if (!valida.isValid) {
-      throw new Error(valida.message); // Lança um erro se a validação falhar
-    }
+    if (!valida.isValid) throw new Error(valida.message);
 
-    const produto = await ProdutoRepository.create(produtoData);
+    const produto = await ProdutoRepository.create({
+      ...produtoData,
+      clienteId,
+    });
 
-    // Criar Garantia automaticamente
+    // Associa o produto ao cliente
+    await ClienteRepository.update(clienteId, {
+      $push: { produtos: produto._id },
+    });
+
+    // Cria a garantia automaticamente
     const garantiaData = {
       produtoId: produto._id,
-      clienteId: clienteId, // Associando ao cliente
+      clienteId: clienteId,
       dataInicio: produtoData.dataCompra,
       dataFim: new Date(
         new Date(produtoData.dataCompra).setMonth(
@@ -27,13 +32,14 @@ class ProdutoService {
             produtoData.garantiaMeses
         )
       ),
+      status: "ativa",
     };
 
     const garantia = await GarantiaRepository.create(garantiaData);
 
-    // Adiciona o ID da garantia no campo garantias do produto
+    // Adiciona a garantia ao array de garantias do produto
     produto.garantias.push(garantia._id);
-    await produto.save(); // Salva o produto com a referência da garantia
+    await produto.save();
 
     return produto;
   }
@@ -51,10 +57,21 @@ class ProdutoService {
   }
 
   async deletarProduto(produtoId) {
+    const produto = await ProdutoRepository.findById(produtoId);
+    if (!produto) throw new Error("Produto não encontrado");
+
+    // Remove as garantias associadas ao produto
+    await GarantiaRepository.deleteMany({ produtoId: produto._id });
+
+    // Remove o produto do array de produtos do cliente
+    await ClienteRepository.update(produto.clienteId, {
+      $pull: { produtos: produto._id },
+    });
+
+    // Remove o próprio produto
     return await ProdutoRepository.delete(produtoId);
   }
 
-  // Função de validação do produto
   validarProduto(produtoData) {
     if (!produtoData.nome || produtoData.nome.trim() === "") {
       return { isValid: false, message: "O nome do produto é obrigatório" };
@@ -74,7 +91,6 @@ class ProdutoService {
         message: "A garantia deve ser um número inteiro positivo",
       };
     }
-
     return { isValid: true, message: "Produto válido" };
   }
 }
