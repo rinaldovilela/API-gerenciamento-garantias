@@ -6,11 +6,15 @@ class ProdutoRepository {
   }
 
   async findById(produtoId) {
-    return await Produto.findById(produtoId).populate("garantias").exec(); // Populando as garantias associadas
+    // Asegure-se de que o populate esteja correto
+    return await Produto.findById(produtoId)
+      .populate("clienteId")
+      .populate("garantias");
   }
 
   async findAll() {
-    return await Produto.find().populate("garantias").exec(); // Populando as garantias para todos os produtos
+    // Asegure-se de que o populate esteja correto
+    return await Produto.find().populate("clienteId").populate("garantias");
   }
 
   async update(produtoId, updateData) {

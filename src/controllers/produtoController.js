@@ -20,6 +20,15 @@ exports.registrarProduto = async (req, res) => {
   }
 };
 
+exports.listarProdutosComGarantias = async (req, res) => {
+  try {
+    const produtos = await ProdutoService.listarProdutosComGarantias();
+    res.status(200).json(produtos);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 exports.listarProdutos = async (req, res) => {
   try {
     const produtos = await ProdutoService.listarProdutos();

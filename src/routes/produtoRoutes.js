@@ -24,6 +24,7 @@ router.post(
   produtoController.registrarProduto
 );
 
+router.get("/produtos/garantias", produtoController.listarProdutosComGarantias);
 router.get("/produtos", produtoController.listarProdutos);
 router.get("/produtos/:id", produtoController.obterProduto);
 

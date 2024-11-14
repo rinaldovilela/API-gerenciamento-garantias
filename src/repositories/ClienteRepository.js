@@ -6,11 +6,11 @@ class ClienteRepository {
   }
 
   async findAll() {
-    return await Cliente.find().populate("produtos"); // Adiciona os produtos associados
+    return await Cliente.find().populate("produtos"); // Popula os produtos
   }
 
   async findById(clienteId) {
-    return await Cliente.findById(clienteId).populate("produtos"); // Adiciona os produtos associados
+    return await Cliente.findById(clienteId).populate("produtos"); // Popula os produtos
   }
 
   async update(clienteId, updateData) {
