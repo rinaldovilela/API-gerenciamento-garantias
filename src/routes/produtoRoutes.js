@@ -63,7 +63,64 @@ module.exports = router;
 
 /**
  * @swagger
- * /api/produtos:
+ * components:
+ *   schemas:
+ *     Produto:
+ *       type: object
+ *       required:
+ *         - nome
+ *         - categoria
+ *         - fabricante
+ *         - dataCompra
+ *         - garantiaMeses
+ *         - clienteId
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: ID único do produto
+ *         nome:
+ *           type: string
+ *           description: Nome do produto
+ *         categoria:
+ *           type: string
+ *           description: Categoria do produto
+ *         fabricante:
+ *           type: string
+ *           description: Fabricante do produto
+ *         dataCompra:
+ *           type: string
+ *           format: date
+ *           description: Data de compra do produto
+ *         garantiaMeses:
+ *           type: integer
+ *           description: Número de meses de garantia
+ *         clienteId:
+ *           type: string
+ *           description: ID do cliente associado ao produto
+ *         garantias:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: IDs das garantias associadas ao produto
+ *       example:
+ *         nome: Notebook Dell XPS
+ *         categoria: Eletrônicos
+ *         fabricante: Dell
+ *         dataCompra: 2023-10-01
+ *         garantiaMeses: 24
+ *         clienteId: 63b1f3e4f5a85e2b4f12e0c5
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Produtos
+ *   description: Gerenciamento de produtos
+ */
+
+/**
+ * @swagger
+ * /produtos:
  *   post:
  *     summary: Cria um novo produto
  *     tags: [Produtos]
@@ -72,111 +129,122 @@ module.exports = router;
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               nome:
- *                 type: string
- *                 description: Nome do produto
- *                 example: "Smartphone X"
- *               categoria:
- *                 type: string
- *                 description: Categoria do produto
- *                 example: "Eletrônicos"
- *               fabricante:
- *                 type: string
- *                 description: Nome do fabricante
- *                 example: "Marca Y"
- *               dataCompra:
- *                 type: string
- *                 format: date
- *                 description: Data de compra do produto
- *                 example: "2023-11-12"
- *               garantiaMeses:
- *                 type: integer
- *                 description: Duração da garantia em meses
- *                 example: 12
+ *             $ref: '#/components/schemas/Produto'
  *     responses:
  *       201:
  *         description: Produto criado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Produto'
  *       400:
- *         description: Erro de validação dos dados de entrada
- *
- * /api/produtos/{id}:
+ *         description: Erro na validação dos dados
+ */
+
+/**
+ * @swagger
+ * /produtos:
  *   get:
- *     summary: Obtém um produto pelo ID
+ *     summary: Lista todos os produtos
  *     tags: [Produtos]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID do produto
- *         schema:
- *           type: string
  *     responses:
  *       200:
- *         description: Produto encontrado
- *       404:
- *         description: Produto não encontrado
- *
- *   put:
- *     summary: Atualiza um produto
+ *         description: Lista de produtos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Produto'
+ */
+
+/**
+ * @swagger
+ * /produtos/garantias:
+ *   get:
+ *     summary: Lista todos os produtos com suas garantias
+ *     tags: [Produtos]
+ *     responses:
+ *       200:
+ *         description: Lista de produtos com garantias
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Produto'
+ */
+
+/**
+ * @swagger
+ * /produtos/{id}:
+ *   get:
+ *     summary: Obtém detalhes de um produto específico
  *     tags: [Produtos]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID do produto a ser atualizado
  *         schema:
  *           type: string
+ *         description: ID do produto
+ *     responses:
+ *       200:
+ *         description: Detalhes do produto
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Produto'
+ *       404:
+ *         description: Produto não encontrado
+ */
+
+/**
+ * @swagger
+ * /produtos/{id}:
+ *   put:
+ *     summary: Atualiza um produto existente
+ *     tags: [Produtos]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do produto
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               nome:
- *                 type: string
- *                 description: Nome do produto
- *                 example: "Smartphone X Atualizado"
- *               categoria:
- *                 type: string
- *                 description: Categoria do produto
- *                 example: "Eletrônicos"
- *               fabricante:
- *                 type: string
- *                 description: Nome do fabricante
- *                 example: "Marca Y"
- *               dataCompra:
- *                 type: string
- *                 format: date
- *                 description: Data de compra do produto
- *                 example: "2023-11-12"
- *               garantiaMeses:
- *                 type: integer
- *                 description: Duração da garantia em meses
- *                 example: 12
+ *             $ref: '#/components/schemas/Produto'
  *     responses:
  *       200:
  *         description: Produto atualizado com sucesso
- *       400:
- *         description: Erro de validação dos dados de entrada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Produto'
  *       404:
  *         description: Produto não encontrado
- *
+ */
+
+/**
+ * @swagger
+ * /produtos/{id}:
  *   delete:
- *     summary: Deleta um produto
+ *     summary: Exclui um produto
  *     tags: [Produtos]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID do produto a ser deletado
  *         schema:
  *           type: string
+ *         description: ID do produto
  *     responses:
  *       200:
- *         description: Produto deletado com sucesso
+ *         description: Produto excluído com sucesso
  *       404:
  *         description: Produto não encontrado
  */
