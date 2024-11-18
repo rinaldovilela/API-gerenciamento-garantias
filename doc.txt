@@ -241,3 +241,11 @@ Ações com Garantias: Implementar funcionalidades como notificação quando a g
 Validação de Expiração: A API poderia realizar uma validação quando o status da garantia for consultado, informando se ela está "ativa" ou "expirada" com base na data atual.
 
 Filtros de Busca e Relatórios: Poderia ser interessante implementar filtros para pesquisar produtos, garantias ou clientes com base em critérios como status de garantia, categoria do produto, ou data de compra.
+
+
+
+senha de app
+
+
+
+shadcn/ui
