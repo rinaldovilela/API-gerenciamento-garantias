@@ -249,3 +249,5 @@ senha de app
 
 
 shadcn/ui
+
+OBJETO ui
