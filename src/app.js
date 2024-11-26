@@ -9,7 +9,6 @@ const garantiaRoutes = require("./routes/garantiaRoutes");
 const app = express();
 app.use(bodyParser.json());
 
-// Configuração do Swagger
 const swaggerOptions = {
   swaggerDefinition: {
     openapi: "3.0.0",
@@ -27,7 +26,5 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use("/api", garantiaRoutes, produtoRoutes);
 app.use("/api/clientes", clienteRoutes);
-
-
 
 module.exports = app;

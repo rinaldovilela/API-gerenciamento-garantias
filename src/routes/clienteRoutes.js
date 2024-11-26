@@ -85,7 +85,7 @@ module.exports = router;
 
 /**
  * @swagger
- * api/clientes:
+ * /api/clientes:
  *   post:
  *     summary: Registra um novo cliente
  *     tags: [Clientes]
@@ -108,7 +108,7 @@ module.exports = router;
 
 /**
  * @swagger
- * api/clientes:
+ * /api/clientes:
  *   get:
  *     summary: Lista todos os clientes
  *     tags: [Clientes]
@@ -125,7 +125,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /clientes/{id}:
+ * /api/clientes/{id}:
  *   get:
  *     summary: Obter informações de um cliente específico
  *     tags: [Clientes]
@@ -149,7 +149,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /clientes/{id}:
+ * /api/clientes/{id}:
  *   put:
  *     summary: Atualiza um cliente existente
  *     tags: [Clientes]
@@ -179,7 +179,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /clientes/{id}:
+ * /api/clientes/{id}:
  *   delete:
  *     summary: Exclui um cliente
  *     tags: [Clientes]

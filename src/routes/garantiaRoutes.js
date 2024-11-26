@@ -64,57 +64,73 @@ router.delete("/garantias/:id", garantiaController.deletarGarantia);
 
 module.exports = router;
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Garantia:
+ *       type: object
+ *       required:
+ *         - produtoId
+ *         - dataInicio
+ *         - dataFim
+ *         - status
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: ID único da garantia
+ *         produtoId:
+ *           type: string
+ *           description: ID do produto associado à garantia
+ *         dataInicio:
+ *           type: string
+ *           format: date-time
+ *           description: Data de início da garantia (formato ISO8601)
+ *         dataFim:
+ *           type: string
+ *           format: date-time
+ *           description: Data de término da garantia (formato ISO8601)
+ *         status:
+ *           type: string
+ *           enum:
+ *             - ativa
+ *             - expirada
+ *           description: Status da garantia (ativa ou expirada)
+ *       example:
+ *         produtoId: "64a78cbecfb1e9db5a5b1234"
+ *         dataInicio: "2024-01-01T00:00:00Z"
+ *         dataFim: "2024-12-31T23:59:59Z"
+ *         status: "ativa"
+ */
 
 /**
  * @swagger
- * api/garantias:
+ * tags:
+ *   name: Garantias
+ *   description: Gerenciamento de garantias
+ */
+
+/**
+ * @swagger
+ * /api/garantias:
  *   post:
  *     summary: Criar uma garantia manualmente
- *     description: Endpoint para criar uma garantia manualmente para um produto, especificando data de início, data de fim e status.
- *     operationId: registrarGarantia
+ *     tags: [Garantias]
  *     requestBody:
- *       description: Dados para criar uma nova garantia
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - produtoId
- *               - dataInicio
- *               - dataFim
- *               - status
- *             properties:
- *               produtoId:
- *                 type: string
- *                 description: ID do produto ao qual a garantia está associada
- *               dataInicio:
- *                 type: string
- *                 format: date-time
- *                 description: Data de início da garantia (formato ISO8601)
- *               dataFim:
- *                 type: string
- *                 format: date-time
- *                 description: Data de término da garantia (formato ISO8601)
- *               status:
- *                 type: string
- *                 enum:
- *                   - ativa
- *                   - expirada
- *                 description: Status da garantia (ativa ou expirada)
+ *             $ref: '#/components/schemas/Garantia'
  *     responses:
- *       '201':
+ *       201:
  *         description: Garantia criada com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Garantia registrada com sucesso"
- *       '400':
- *         description: Requisição inválida, com erro na validação dos dados
+ *               $ref: '#/components/schemas/Garantia'
+ *       400:
+ *         description: Erro na validação dos dados
  *         content:
  *           application/json:
  *             schema:
@@ -129,210 +145,92 @@ module.exports = router;
 
 /**
  * @swagger
- * api/garantias:
+ * /api/garantias:
  *   get:
  *     summary: Listar todas as garantias
- *     description: Endpoint para listar todas as garantias registradas.
- *     operationId: listarGarantias
+ *     tags: [Garantias]
  *     responses:
- *       '200':
- *         description: Lista de garantias obtidas com sucesso
+ *       200:
+ *         description: Lista de garantias obtida com sucesso
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
- *                   produtoId:
- *                     type: string
- *                   dataInicio:
- *                     type: string
- *                     format: date-time
- *                   dataFim:
- *                     type: string
- *                     format: date-time
- *                   status:
- *                     type: string
+ *                 $ref: '#/components/schemas/Garantia'
  */
-
 
 /**
  * @swagger
- * api/garantias/{id}:
+ * /api/garantias/{id}:
  *   get:
  *     summary: Obter uma garantia específica
- *     description: Endpoint para obter os detalhes de uma garantia específica, utilizando o ID.
- *     operationId: obterGarantia
+ *     tags: [Garantias]
  *     parameters:
  *       - name: id
  *         in: path
  *         required: true
- *         description: ID da garantia a ser recuperada
  *         schema:
  *           type: string
+ *         description: ID da garantia a ser recuperada
  *     responses:
- *       '200':
+ *       200:
  *         description: Garantia encontrada com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 produtoId:
- *                   type: string
- *                 dataInicio:
- *                   type: string
- *                   format: date-time
- *                 dataFim:
- *                   type: string
- *                   format: date-time
- *                 status:
- *                   type: string
- *       '404':
+ *               $ref: '#/components/schemas/Garantia'
+ *       404:
  *         description: Garantia não encontrada
  */
 
-
 /**
  * @swagger
- * /garantias/{id}:
+ * /api/garantias/{id}:
  *   put:
  *     summary: Atualizar uma garantia específica
- *     description: Endpoint para atualizar os detalhes de uma garantia específica, utilizando o ID.
- *     operationId: atualizarGarantia
+ *     tags: [Garantias]
  *     parameters:
  *       - name: id
  *         in: path
  *         required: true
- *         description: ID da garantia a ser atualizada
  *         schema:
  *           type: string
+ *         description: ID da garantia a ser atualizada
  *     requestBody:
- *       description: Dados para atualizar a garantia
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - produtoId
- *               - dataInicio
- *               - dataFim
- *               - status
- *             properties:
- *               produtoId:
- *                 type: string
- *                 description: ID do produto ao qual a garantia está associada
- *               dataInicio:
- *                 type: string
- *                 format: date-time
- *                 description: Data de início da garantia (formato ISO8601)
- *               dataFim:
- *                 type: string
- *                 format: date-time
- *                 description: Data de término da garantia (formato ISO8601)
- *               status:
- *                 type: string
- *                 enum:
- *                   - ativa
- *                   - expirada
- *                 description: Status da garantia (ativa ou expirada)
+ *             $ref: '#/components/schemas/Garantia'
  *     responses:
- *       '200':
+ *       200:
  *         description: Garantia atualizada com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Garantia atualizada com sucesso"
- *       '400':
- *         description: Erro de validação nos dados fornecidos
- *       '404':
+ *               $ref: '#/components/schemas/Garantia'
+ *       400:
+ *         description: Erro na validação dos dados fornecidos
+ *       404:
  *         description: Garantia não encontrada
  */
 
 /**
  * @swagger
- * api/garantias/{id}:
- *   put:
- *     summary: Atualizar uma garantia específica
- *     description: Endpoint para atualizar os detalhes de uma garantia específica, utilizando o ID.
- *     operationId: atualizarGarantia
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         description: ID da garantia a ser atualizada
- *         schema:
- *           type: string
- *     requestBody:
- *       description: Dados para atualizar a garantia
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - produtoId
- *               - dataInicio
- *               - dataFim
- *               - status
- *             properties:
- *               produtoId:
- *                 type: string
- *                 description: ID do produto ao qual a garantia está associada
- *               dataInicio:
- *                 type: string
- *                 format: date-time
- *                 description: Data de início da garantia (formato ISO8601)
- *               dataFim:
- *                 type: string
- *                 format: date-time
- *                 description: Data de término da garantia (formato ISO8601)
- *               status:
- *                 type: string
- *                 enum:
- *                   - ativa
- *                   - expirada
- *                 description: Status da garantia (ativa ou expirada)
- *     responses:
- *       '200':
- *         description: Garantia atualizada com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Garantia atualizada com sucesso"
- *       '400':
- *         description: Erro de validação nos dados fornecidos
- *       '404':
- *         description: Garantia não encontrada
- */
-
-
-/**
- * @swagger
- * api/garantias/{id}:
+ * /api/garantias/{id}:
  *   delete:
  *     summary: Deletar uma garantia
- *     description: Endpoint para deletar uma garantia específica, utilizando o ID.
- *     operationId: deletarGarantia
+ *     tags: [Garantias]
  *     parameters:
  *       - name: id
  *         in: path
  *         required: true
- *         description: ID da garantia a ser deletada
  *         schema:
  *           type: string
+ *         description: ID da garantia a ser deletada
  *     responses:
- *       '200':
+ *       200:
  *         description: Garantia deletada com sucesso
  *         content:
  *           application/json:
@@ -342,6 +240,6 @@ module.exports = router;
  *                 message:
  *                   type: string
  *                   example: "Garantia deletada com sucesso"
- *       '404':
+ *       404:
  *         description: Garantia não encontrada
  */
