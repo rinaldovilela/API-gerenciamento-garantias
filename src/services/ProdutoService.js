@@ -1,16 +1,21 @@
 const ProdutoRepository = require("../repositories/ProdutoRepository");
 const GarantiaRepository = require("../repositories/GarantiaRepository");
 const ClienteRepository = require("../repositories/ClienteRepository");
+const { enviarEmail } = require("../services/emailService");
 
 class ProdutoService {
+  // Lista produtos com garantias associadas
   async listarProdutosComGarantias() {
     return await ProdutoRepository.findAll();
   }
 
+  // Registra um produto e notifica o cliente
   async registrarProduto(produtoData, clienteId) {
+    // Valida os dados do produto
     const valida = this.validarProduto(produtoData);
     if (!valida.isValid) throw new Error(valida.message);
 
+    // Cria o produto
     const produto = await ProdutoRepository.create({
       ...produtoData,
       clienteId,
@@ -41,21 +46,53 @@ class ProdutoService {
     produto.garantias.push(garantia._id);
     await produto.save();
 
+    // Notifica o cliente via e-mail
+    const cliente = await ClienteRepository.findById(clienteId);
+    if (cliente) {
+      const mensagem = `
+        Olá, ${cliente.nome}!
+
+        O produto "${
+          produto.nome
+        }" foi registrado com sucesso no sistema de garantias.
+        Detalhes da garantia:
+        - Data de Início: ${garantia.dataInicio.toLocaleDateString()}
+
+        - Data de Expiração: ${garantia.dataFim.toLocaleDateString()}
+
+        - Status: ${garantia.status}
+
+        Atenciosamente,
+        Equipe de Gestão de Garantias
+
+        SOFTEX PERNAMBUCO
+      `;
+      await enviarEmail(
+        cliente.email,
+        "Produto Registrado com Sucesso!",
+        mensagem
+      );
+    }
+
     return produto;
   }
 
+  // Lista todos os produtos
   async listarProdutos() {
     return await ProdutoRepository.findAll();
   }
 
+  // Obtém um produto pelo ID
   async obterProduto(produtoId) {
     return await ProdutoRepository.findById(produtoId);
   }
 
+  // Atualiza um produto pelo ID
   async atualizarProduto(produtoId, updateData) {
     return await ProdutoRepository.update(produtoId, updateData);
   }
 
+  // Deleta um produto e as garantias associadas
   async deletarProduto(produtoId) {
     const produto = await ProdutoRepository.findById(produtoId);
     if (!produto) throw new Error("Produto não encontrado");
@@ -72,6 +109,7 @@ class ProdutoService {
     return await ProdutoRepository.delete(produtoId);
   }
 
+  // Valida os dados do produto
   validarProduto(produtoData) {
     if (!produtoData.nome || produtoData.nome.trim() === "") {
       return { isValid: false, message: "O nome do produto é obrigatório" };

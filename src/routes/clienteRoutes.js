@@ -85,7 +85,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /clientes:
+ * api/clientes:
  *   post:
  *     summary: Registra um novo cliente
  *     tags: [Clientes]
@@ -108,7 +108,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /clientes:
+ * api/clientes:
  *   get:
  *     summary: Lista todos os clientes
  *     tags: [Clientes]

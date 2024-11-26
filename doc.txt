@@ -251,3 +251,8 @@ senha de app
 shadcn/ui
 
 OBJETO ui
+
+
+
+softexgarantias
+m9oUBdDNHV3RSOYB
