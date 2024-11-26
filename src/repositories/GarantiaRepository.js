@@ -1,4 +1,4 @@
-const Garantia = require("../models/Garantia");
+const Garantia = require("../models/garantia");
 
 class GarantiaRepository {
   async create(garantiaData) {
