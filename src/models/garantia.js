@@ -1,10 +1,15 @@
 const mongoose = require("mongoose");
 
-const GarantiaSchema = new mongoose.Schema({
-  produtoId: { type: mongoose.Schema.Types.ObjectId, ref: "Produto" },
-  dataInicio: Date,
-  dataFim: Date,
-  status: { type: String, enum: ["ativa", "expirada"] },
-});
+const garantiaSchema = new mongoose.Schema(
+  {
+    produtoId: { type: mongoose.Schema.Types.ObjectId, ref: "Produto" },
+    clienteId: { type: mongoose.Schema.Types.ObjectId, ref: "Cliente" },
+    dataInicio: Date,
+    dataFim: Date,
+    status: { type: String, enum: ["ativa", "expirada"] },
+    notificacoes: { type: [Number], default: [] },
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model("Garantia", GarantiaSchema);
+module.exports = mongoose.model("Garantia", garantiaSchema);

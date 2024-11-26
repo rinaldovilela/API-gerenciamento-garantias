@@ -6,11 +6,13 @@ class ProdutoRepository {
   }
 
   async findById(produtoId) {
-    return await Produto.findById(produtoId);
+    return await Produto.findById(produtoId)
+      .populate("clienteId")
+      .populate("garantias");
   }
 
   async findAll() {
-    return await Produto.find();
+    return await Produto.find().populate("clienteId").populate("garantias");
   }
 
   async update(produtoId, updateData) {

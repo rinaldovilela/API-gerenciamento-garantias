@@ -19,10 +19,12 @@ router.post(
     body("garantiaMeses")
       .isInt({ gt: 0 })
       .withMessage("A garantia deve ser um número inteiro positivo"),
+    body("clienteId").notEmpty().withMessage("O ID do cliente é obrigatório"), // Validação do cliente
   ],
   produtoController.registrarProduto
 );
 
+router.get("/produtos/garantias", produtoController.listarProdutosComGarantias);
 router.get("/produtos", produtoController.listarProdutos);
 router.get("/produtos/:id", produtoController.obterProduto);
 
